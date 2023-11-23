@@ -31,3 +31,10 @@ Cloud computing is the delivery of computing services
 
 ### First sample cloud app. hello world deployment for python.
 https://first-project-405718.ue.r.appspot.com/
+
+
+## Important links for GCP certifications
+https://www.examtopics.com/exams/google/associate-cloud-engineer/view/9/
+
+## find container IP
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_name_or_id>
