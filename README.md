@@ -38,3 +38,8 @@ https://www.examtopics.com/exams/google/associate-cloud-engineer/view/9/
 
 ## find container IP
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_name_or_id>
+
+## DevOps
+WORKDIR does not set the working directory for the rest of the Dockerfile #2282
+https://github.com/docker/for-win/issues/2282
+
