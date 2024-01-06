@@ -43,3 +43,51 @@ docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <co
 WORKDIR does not set the working directory for the rest of the Dockerfile #2282
 https://github.com/docker/for-win/issues/2282
 
+## DEMO
+Create a VM instance under Compute Engine.
+Login to ExternIP , SSH-in-browser.
+
+https://www.youtube.com/watch?v=rzsyj1x54AU&list=PLLu1bCv5AByGUZUl4N2fhZdtHg0pd7G8E&index=2
+
+https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-20-04
+
+$ journalctl -u jenkins
+
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: Starting Jenkins Continuous Integration Server...
+Jan 06 18:44:45 gcp-instance-1 jenkins[4123]: jenkins: failed to find a valid Java installation
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: jenkins.service: Main process exited, code=exited, status=1/FAILURE
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: jenkins.service: Failed with result 'exit-code'.
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: Failed to start Jenkins Continuous Integration Server.
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: jenkins.service: Scheduled restart job, restart counter is at 2.
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: Stopped Jenkins Continuous Integration Server.
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: Starting Jenkins Continuous Integration Server...
+Jan 06 18:44:45 gcp-instance-1 jenkins[4146]: jenkins: failed to find a valid Java installation
+Jan 06 18:44:45 gcp-instance-1 systemd[1]: jenkins.service: Main process exited, code=exited, status=1/FAILURE
+abinash_behera04@gcp-instance-1:~$ java -version
+-bash: java: command not found
+abinash_behera04@gcp-instance-1:~$ sudo apt install default-jre
+
+Error:
+
+Job for jenkins.service failed because the control process exited with error code.
+See "systemctl status jenkins.service" and "journalctl -xe" for details.
+invoke-rc.d: initscript jenkins, action "start" failed.
+● jenkins.service - Jenkins Continuous Integration Server
+     Loaded: loaded (/lib/systemd/system/jenkins.service; enabled; vendor preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Sat 2024-01-06 18:49:12 UTC; 5ms ago
+    Process: 5726 ExecStart=/usr/bin/jenkins (code=exited, status=1/FAILURE)
+   Main PID: 5726 (code=exited, status=1/FAILURE)
+        CPU: 8ms
+dpkg: error processing package jenkins (--configure):
+ installed jenkins package post-installation script subprocess returned error exit status 1
+ 
+Error Fix:
+
+$ curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
+  /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+$ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+  https://pkg.jenkins.io/debian binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+  
+https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-on-debian-11
