@@ -91,3 +91,36 @@ $ echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
 
   
 https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-on-debian-11
+
+![Alt text](image.png)
+
+
+Q. how to enable http and https traffic gcp after creating vm?
+firewall has moved under network secuirty in GCP
+Create a firewall rule
+In VPC network click on Firewall rules
+Click "CREATE FIREWALL RULE"
+Provide Firewall rule details as listed below.
+Name: allow-http-all
+Logs: Off
+Network: default(or any other network where target vms located)
+Priority: 1000
+Direction of traffic: Ingress
+Targets: All instances in network(this configuration for only dev purpose, in prod specified target tags should be provided)
+Source IP ranges: 0.0.0.0/0(this is open to all if you want to restrict access configure IP range accordingly)
+Second source filter: None
+Protocols and ports: Select Specified protocols and ports
+Select tcp and use port 80.
+Click-> Create.
+
+Login to externalIP:8080 to login to jenkins
+http://34.135.58.67:8080/
+
+Unlock Jenkins
+To ensure Jenkins is securely set up by the administrator, a password has been written to the log (not sure where to find it?) and this file on the server:
+
+/var/lib/jenkins/secrets/initialAdminPassword
+
+Please copy the password from either location and paste it below.
+
+![Alt text](image-1.png)
