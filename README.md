@@ -97,6 +97,9 @@ https://www.digitalocean.com/community/tutorials/how-to-install-java-with-apt-on
 
 Q. how to enable http and https traffic gcp after creating vm?
 firewall has moved under network secuirty in GCP
+
+https://www.gcptutorials.com/post/how-to-enable-http-traffic-in-gcp
+
 Create a firewall rule
 In VPC network click on Firewall rules
 Click "CREATE FIREWALL RULE"
@@ -124,3 +127,92 @@ To ensure Jenkins is securely set up by the administrator, a password has been w
 Please copy the password from either location and paste it below.
 
 ![Alt text](image-1.png)
+
+Create first admin user. uname/pwd is same.
+![Alt text](image-2.png)
+
+http://34.135.58.67:8080/ -- jenkins url
+
+Manage jenkins to add ssh agent
+![Alt text](image-3.png)
+
+Go to Plugins -> Available Plugins -> type ssh -> checkmark SSH Agent-> Install-> Restart Jenkins when installation is complete and no jobs are running
+![Alt text](image-4.png)
+
+login to jenkins - uname: abinash, pwd=uname
+
+# Create a project locally.
+npx create-react-app film-stack
+git init (not required as its already done by npx)
+git add .
+git commit -m "initial commit"
+git remote add origin https://github.com/Abinash04/film-stack.git
+
+ab067240@ab067240-mac film-stack % git push -u origin master
+Username for 'https://github.com': Abinash04
+Password for 'https://Abinash04@github.com': 
+remote: Support for password authentication was removed on August 13, 2021.
+remote: Please see https://docs.github.com/en/get-started/getting-started-with-git/about-remote-repositories#cloning-with-https-urls for information on currently recommended modes of authentication.
+fatal: Authentication failed for 'https://github.com/Abinash04/film-stack.git/'
+
+GitHub Profile-> Settings -> Developer Settings - > Personal access token -> Generate new token (create and save the token as its not going to show up again)
+
+Jenkins build now
+
+![Alt text](image-5.png)
+
+Need to install git on the server
+
+sudo apt-get install git - y
+
+![Alt text](image-6.png)
+
+abinash_behera04@gcp-instance-1:~$ ls /var/lib/jenkins/workspace/film-stack-pipeline
+README.md  package-lock.json  package.json  public  src
+
+We can see the build has created automated git checkout of the repo.
+
+This was done manually in the "Build Now" from jenkins.
+
+We will automate this step so that anytime we push any new changes in the git then it should automatically build in the jenkins.
+
+Go to configure in the jenkins screeen and under General we can see the items which we have already checked mark.
+- Do not allow concurrent builds.
+- GitHub project 
+Project url: https://github.com/Abinash04/film-stack/
+and 
+- GitHub hook trigger for GITScm polling
+
+Lets make some changes in the master branch and see if the automated build is working or not.
+We need to add one more settings in the GitHub for webhook.
+
+In GitHub - Go to project settings in film-stack-> Setting-> Webhooks -> Add webhook
+
+In Jenkins - Go to your profile -> configure -> API Token -> Add New token
+
+![Alt text](image-8.png)
+
+Copy this token in the Github webhooks section
+
+![Alt text](image-9.png)
+
+Payload URL updated: http://34.135.58.67:8080/github-webhook/ as its giving 403 error.
+
+![Alt text](image-10.png)
+
+
+A crumb is nothing but an access token. Below is the API to get the crumb:
+
+
+http://34.135.58.67:8080/crumbIssuer/api/json
+
+Response:
+
+{
+_class: "hudson.security.csrf.DefaultCrumbIssuer",
+crumb: "ec9179ea0967b86ec39fdaa0a27d4df2c87db6223765f8ff2d77df286e87c8a0",
+crumbRequestField: "Jenkins-Crumb"
+}
+
+Issue can be fixed by below:
+Click on Jenkins Dashboard->Manage Jenkins->Security-> under CSRF Protection -> check mark the "Enable proxy compatibility".
